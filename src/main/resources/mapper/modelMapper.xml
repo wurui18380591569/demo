@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dao.ModelDao">
+    <resultMap id="BaseResultMap" type="com.dao.entity.Model">
+        <id column="id" property="modelId" jdbcType="INTEGER"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="model_description" property="modelDescription" jdbcType="VARCHAR"/>
+        <result column="entry_date" property="entryDate" jdbcType="TIMESTAMP"/>
+        <result column="delete_date" property="deleteDate" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <select id="findById" resultMap="BaseResultMap">
+        select *
+        from model
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <select id="getAllModel" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select *
+        from model
+    </select>
+
+    <select id="getModelDetail" parameterType="java.lang.Integer" resultType="Map">
+    drop table if EXISTS temp_function_no ;
+
+    create temporary  table temp_function_no(
+	id int(11) NOT NULL AUTO_INCREMENT,
+	function_no integer,
+	sub_function_no integer,
+	depend_type varchar(20),
+	PRIMARY KEY (`id`) USING BTREE,
+	UNIQUE KEY `uidx` (function_no,sub_function_no)
+	);
+
+	insert into temp_function_no (function_no,sub_function_no)
+	select  m.function_id,f.sub_id from model_function_depend m
+	left join function_depend f
+	on m.function_id=f.parent_id
+	where m.model_id=#{id,jdbcType=INTEGER};
+    call query_function;
+
+    drop table  temp_function_no
+    </select>
+
+    <select id="getModelFunctionDepend" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+        select function_id
+        from model_function_depend
+        where model_id = #{id,jdbcType=INTEGER}
+    </select>
+</mapper>

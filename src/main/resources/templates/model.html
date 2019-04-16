@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>funcion model</title>
+    <style>
+        html { margin:0; padding:0; font-size:62.5%; }
+        body { max-width:800px; min-width:300px; margin:0 auto; padding:20px 10px; font-size:14px; font-size:1.4em; }
+        h1 { font-size:1.8em; }
+        .tree { overflow:auto; border:1px solid silver; min-height:100px; }
+    </style>
+    <link rel="stylesheet" href="static/dist/themes/default/style.min.css" />
+</head>
+<body>
+
+<h1>The Whole Model </h1>
+<div id="allajax" class="tree"></div>
+
+<h1>Model</h1>
+<input type="text"  value="" placeholder="please input model id" id='modelId'>
+<input type="button"  value="queryModel" id='modelBtnAjax'>
+
+<h1>Model Detail</h1>
+<div id="modelajax" class="tree"></div>
+
+<h1>Function</h1>
+<input type="text"  value="" placeholder="please input model id" id='functionId'>
+<input type="button"  value="queryFunction" id='functionBtnAjax'>
+
+<h1>Function Detail</h1>
+<div id="funajax" class="tree"></div>
+
+<script src="http://www.jq22.com/jquery/1.11.1/jquery.min.js"></script>
+<script src="static/dist/jstree.min.js"></script>
+
+<script>
+
+
+    // ajax demo
+    $('#allajax').jstree({
+        'core' : {
+            'data' : {
+                "url" : "/model/getModelList",
+                "dataType" : "json" // needed only if you do not supply JSON headers
+            }
+        }
+    });
+
+    $('#functionBtnAjax').on('click', function () {
+        var formid = document.getElementById("functionId").value;
+        $('#funajax').jstree({
+            'core' : {
+                'data' : {
+                    type: "get",
+                    "url" : "/function/getFunction?functionId="+formid,
+                    "dataType" : "json"
+                }
+
+            }
+        });
+    });
+
+    $('#modelBtnAjax').on('click', function () {
+        var formid = document.getElementById("modelId").value;
+        $('#modelajax').jstree({
+            'core' : {
+                'data' : {
+                    type: "get",
+                    "url" : "/model/getModel?modelId="+formid,
+                    "dataType" : "json"
+                }
+
+            }
+        });
+    });
+
+
+</script>
+
+</body>
+</html>

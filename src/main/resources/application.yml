@@ -1,0 +1,26 @@
+server:
+  port: 8088
+
+
+#默认使用配置
+spring:
+  profiles:
+    active: dev
+#公共配置与profiles选择无关
+mybatis:
+  typeAliasesPackage: com.dao.entity
+  mapperLocations: classpath:mapper/*.xml
+
+
+---
+
+#开发配置
+spring:
+  profiles: dev
+
+  datasource:
+    url: jdbc:mysql://192.168.99.1:3306/rsm_function?serverTimezone=UTC&allowMultiQueries=true
+    username: myuser
+    password: mypassword
+    driver-class-name: com.mysql.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
